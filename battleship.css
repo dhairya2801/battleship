@@ -45,3 +45,7 @@ body {
 .ship-3 {width: 120px;}
 .ship-2 {width: 80px;}
 .ship-1 {width: 40px;}
+
+.over {
+    border: 1px solid green;
+}
