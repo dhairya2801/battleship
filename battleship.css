@@ -1,3 +1,8 @@
+body {
+    display: grid;
+    gap: 50px;
+}
+
 #boards {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -7,12 +12,41 @@
 #boards > div { 
     display: grid;
     grid-template-columns: repeat(10,1fr);
-    max-width: 500px;
+    width: 400px;
     aspect-ratio: 1/1;
-    border: 1px solid #ccc;
+    border: 1px solid #eee;
 }
 
 .board-cell {
     border: 1px solid #ddd;
     box-sizing: border-box;
+}
+
+#container > div {
+    display: flex;
+    margin-bottom: 20px;
+    gap: 20px;
+}
+
+.ship-4 > div {
+    width: 160px;
+}
+
+.ship-3 > div {
+    width: 120px;
+}
+
+.ship-2 > div {
+    width: 80px;
+}
+
+.ship-1 > div {
+    width: 40px;
+}
+
+.ship {
+    height: 40px;
+    border: 1px solid rgb(34, 23, 255);
+    background-color: rgb(228, 228, 255);
+    opacity: 0.5;
 }
