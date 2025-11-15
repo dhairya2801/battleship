@@ -1,0 +1,18 @@
+#boards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 50px;
+}
+
+#boards > div { 
+    display: grid;
+    grid-template-columns: repeat(10,1fr);
+    max-width: 500px;
+    aspect-ratio: 1/1;
+    border: 1px solid #ccc;
+}
+
+.board-cell {
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
