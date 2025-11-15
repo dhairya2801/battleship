@@ -7,6 +7,8 @@
 // 3. randomize the second board, fired on a button click
 // 4. make a test run
 
+import './battleship.css';
+
 const boards = document.getElementById('boards');
 const board1 = document.getElementById('board1');
 const board2 = document.getElementById('board2');
