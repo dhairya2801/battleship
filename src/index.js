@@ -4,10 +4,8 @@
 // - disable the surrounding cells
 // - allow 90 deg rotate on click
 // 2. handle ship overflowing outside the board
-// 3. randomize the second board, fired on a button click
+// 3. add reset and randomize buttons
 // 4. make a test run
-
-import './battleship.css';
 
 const boards = document.getElementById('boards');
 const board1 = document.getElementById('board1');
@@ -57,4 +55,13 @@ board1.addEventListener('drop', (e) => {
     draggableElement.style.position = 'absolute';
     draggableElement.style.left = `${snapLeft}px`;
     draggableElement.style.top = `${snapTop}px`;
+
+    // add placed class
+    draggableElement.classList.add('placed');
+    // store coordinates
+    setShip(snapLeft, snapTop, id);
 })
+
+function setShip(left, top, id) {
+    
+}

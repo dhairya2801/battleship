@@ -1,12 +1,15 @@
-body {
+#container {
     display: grid;
-    gap: 50px;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    place-items: center;
+    padding: 50px;
 }
 
 #boards {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    column-gap: 50px;
+    gap: 50px;
 }
 
 #boards > div { 
@@ -48,4 +51,8 @@ body {
 
 .over {
     border: 1px solid green;
+}
+
+.placed {
+    border: 1px solid red;
 }
