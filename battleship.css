@@ -10,6 +10,7 @@ body {
 }
 
 #boards > div { 
+    position: relative;
     display: grid;
     grid-template-columns: repeat(10,1fr);
     width: 400px;
@@ -22,26 +23,15 @@ body {
     box-sizing: border-box;
 }
 
-#container > div {
+#ship-dock {
     display: flex;
-    margin-bottom: 20px;
+    flex-direction: column;
+    gap:20px;
+}
+
+#ship-dock > div {
+    display: flex;
     gap: 20px;
-}
-
-.ship-4 > div {
-    width: 160px;
-}
-
-.ship-3 > div {
-    width: 120px;
-}
-
-.ship-2 > div {
-    width: 80px;
-}
-
-.ship-1 > div {
-    width: 40px;
 }
 
 .ship {
@@ -50,3 +40,8 @@ body {
     background-color: rgb(228, 228, 255);
     opacity: 0.5;
 }
+
+.ship-4 {width: 160px;}
+.ship-3 {width: 120px;}
+.ship-2 {width: 80px;}
+.ship-1 {width: 40px;}
