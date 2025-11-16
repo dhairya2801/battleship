@@ -11,6 +11,7 @@
     <h1>Battleship</h1>
     <div id="container">
         <div id="ship-dock">
+            <p>Ship Dock</p>
             <div>
                 <div class="ship ship-4" id="sa" draggable="true"></div>
             </div>
@@ -31,14 +32,22 @@
                 <div class="ship ship-1" id="sj" draggable="true"></div>    
             </div>
         </div>
-        <div id="boards">        
-            <div id="board1">
-
+        <div id="boards">
+            <div>
+                <p class="boardHeading">Your Board</p>
+                <div id="board1"></div>
             </div>
-            <div id="board2">
-
+            <div id="frame2" class="hidden">
+                <p class="boardHeading">Computer</p>
+                <div id="board2"></div>
             </div>
         </div>
+    </div>
+    <div class="info">Welcome! Place your ships. Click on the ship after placing
+        to rotate.
+    </div>
+    <div id="c2">
+        <button id="play">Play</button>
     </div>
 </body>
 </html>

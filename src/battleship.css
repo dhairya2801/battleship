@@ -1,8 +1,13 @@
+body {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    align-items: center;
+}
 #container {
     display: grid;
     grid-template-columns: 1fr 2fr;
     gap: 20px;
-    place-items: center;
     padding: 50px;
 }
 
@@ -12,7 +17,7 @@
     gap: 50px;
 }
 
-#boards > div { 
+#board1, #board2 { 
     position: relative;
     display: grid;
     grid-template-columns: repeat(10,1fr);
@@ -49,10 +54,16 @@
 .ship-2 {width: 80px;}
 .ship-1 {width: 40px;}
 
-.over {
+.placed {
     border: 1px solid green;
+    transform-origin: top left;
+    transition: transform 0.2s ease;
 }
 
-.placed {
-    border: 1px solid red;
+.rotated {
+    transform: rotate(90deg) translateY(-40px);
+}
+
+.hidden {
+    display: none;
 }
