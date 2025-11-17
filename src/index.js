@@ -1,13 +1,3 @@
-// TODO:
-// 1. when a ship is placed; 
-// - disable the surrounding cells
-// 2. handle ship edge cases
-// - overflowing outside the board
-// - overlapping on other ships
-// - being placed on adjacent cells
-// 3. add reset and randomize buttons
-// 4. make a test run
-
 const boards = document.getElementById('boards');
 const board1 = document.getElementById('board1');
 const board2 = document.getElementById('board2');
@@ -153,23 +143,57 @@ function updateStatus(message) {
 const playBtn = document.getElementById('play');
 
 playBtn.addEventListener('click', () => {
-    frame2.classList.toggle('hidden');
-    shipDock.classList.toggle('hidden');
     if (shipCoords1.size === 10) {
+        randomizeComputer();
         startGame();
     }
-    randomizeComputer();
+    else {
+        alert('Please place all ships!');
+    }
 })
 
 const playerShips = new Set();
 function startGame() {
-    // contains cell coordinates with a ship
-    for (const [key, value] of shipCoords1) {
-        for (let i=0; i<value.length; i++) {
-            playerShips.add(value);
-        }
+    playBtn.disabled = true;
+    updateStatus('Your turn! Attack the enemy.');
+    frame2.classList.toggle('hidden');
+    shipDock.classList.toggle('hidden');
+
+    board1.removeEventListener('dragover', handleDragOver);
+    board1.removeEventListener('drop', handleDrop);
+    board1.removeEventListener('click', handleShipRotate);
+
+    board2.addEventListener('click', handlePlayerAttack);
+}
+
+function handlePlayerAttack(e) {
+    const cell = e.target;
+    const row = cell.dataset.row;
+    const col = cell.dataset.col;
+    const coord = `${row},${col}`;
+
+    if (cell.classList.contains('hit') || cell.classList.contains('miss')) {
+        return;
     }
 
+    if (computerShipCoords.has(coord)) {
+        cell.classList.add('hit');
+        computerShipCoords.delete(coord);
+        updateStatus('Hit!');
+
+        if (computerShipCoords.size === 0) {
+            endGame(true);
+        } else {
+            board2.removeEventListener('click', handlePlayerAttack);
+            setTimeout(computerTurn, 500);
+        }
+    }
+    else {
+        cell.classList.add('miss');
+        updateStatus('Miss!');
+        board2.removeEventListener('click', handlePlayerAttack);
+        setTimeout(computerTurn, 500);
+    }
 }
 
 function randomizeComputer() {
@@ -181,10 +205,8 @@ function randomizeComputer() {
             let row = Math.floor(Math.random() * 10);
             let isRotated = Math.random() > 0.5;
 
-            // const overflow = isOverflowing(col, row, length, isRotated);
-            const overflow = false;
-            // const overlap = isOverlapping(col, row, length, isRotated, computerShipCoords);
-            const overlap = false;
+            const overflow = isOverflowing(col, row, length, isRotated);
+            const overlap = isOverlapping(col, row, length, isRotated, computerShipCoords);
 
             if (!overflow && !overlap) {
                 const shipId = `c-ship-${length}-${col},${row}`;
@@ -204,13 +226,50 @@ function randomizeComputer() {
             }
         }
     }
-    console.log(shipCoords2);
-}
-
-function humanTurn() {
-
 }
 
 function computerTurn() {
+    updateStatus('Computer is thinking...');
+    let guessCoord;
+    let validGuess = false;
 
+    let row, col;
+
+    while (!validGuess) {
+        row = Math.floor(Math.random() * 10);
+        col = Math.floor(Math.random() * 10);
+        guessCoord = `${row},${col}`;
+
+        if (!computerGuesses.has(guessCoord)) {
+            validGuess = true;
+            computerGuesses.add(guessCoord);
+        }
+    }
+
+    if (playerShipCoords.has(guessCoord)) {
+        updateStatus('The computer hit one of your ships!');
+        board1.querySelector(`[data-row='${row}'][data-col='${col}']`).classList.add('hit');
+        playerShipCoords.delete(guessCoord);
+        if (playerShipCoords.size === 0) {
+            endGame(false);
+        }
+    }
+    else {
+        updateStatus('The computer missed!');
+        board1.querySelector(`[data-row='${row}'][data-col='${col}']`).classList.add('miss');
+    }
+    updateStatus('Your turn!');
+    setTimeout(() => {}, 500);
+    board2.addEventListener('click', handlePlayerAttack);
+}
+
+function endGame(playerWon) {
+    board2.removeEventListener('click', handlePlayerAttack);
+
+    if (playerWon) {
+        updateStatus('YOU WIN!');
+    }
+    else {
+        updateStatus('The computer wins.');
+    }
 }

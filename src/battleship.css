@@ -44,9 +44,8 @@ body {
 
 .ship {
     height: 40px;
-    border: 1px solid #850E35;
-    background-color: #FCF5EE;
-    opacity: 0.8;
+    background-color: #4d4d61;
+    opacity: 0.5;
 }
 
 .ship-4 {width: 160px;}
@@ -55,7 +54,7 @@ body {
 .ship-1 {width: 40px;}
 
 .placed {
-    border: 1px solid green;
+    /* border: 1px solid green; */
     transform-origin: top left;
     transition: transform 0.2s ease;
 }
@@ -66,4 +65,12 @@ body {
 
 #ship-dock.hidden, #frame2.hidden {
     display: none;
+}
+
+.hit {
+    background-color: rgb(145, 193, 145);
+}
+
+.miss {
+    background-color: rgb(218, 152, 152);
 }
