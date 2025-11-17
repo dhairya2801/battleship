@@ -3,6 +3,7 @@ body {
     flex-direction: column;
     gap: 50px;
     align-items: center;
+    background-color: #ffffff;
 }
 #container {
     display: grid;
@@ -43,9 +44,9 @@ body {
 }
 
 .ship {
+    border: 1px solid #3F72AF;
     height: 40px;
-    background-color: #4d4d61;
-    opacity: 0.5;
+    background-color: #DBE2EF;
 }
 
 .ship-4 {width: 160px;}
@@ -54,7 +55,6 @@ body {
 .ship-1 {width: 40px;}
 
 .placed {
-    /* border: 1px solid green; */
     transform-origin: top left;
     transition: transform 0.2s ease;
 }
@@ -68,7 +68,7 @@ body {
 }
 
 .hit {
-    background-color: rgb(145, 193, 145);
+    background-color: rgb(134, 200, 134);
 }
 
 .miss {

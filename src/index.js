@@ -78,11 +78,74 @@ function handleShipRotate(e) {
     }
 }
 
+document.getElementById('reset').addEventListener('click', resetBoard);
+
+function resetBoard() {
+    location.reload();
+    shipCoords1.clear();
+    playerShipCoords.clear();
+}
+
 const shipCoords1 = new Map();
 const shipCoords2 = new Map();
 const computerShipCoords = new Set();
 const playerShipCoords = new Set();
 const computerGuesses = new Set();
+
+const randomizeButton = document.getElementById('randomize');
+randomizeButton.addEventListener('click', randomizePlayer);
+function randomizePlayer() {
+    shipCoords1.clear();
+    playerShipCoords.clear();
+    
+    const shipIds = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
+    for (const s of shipIds) {
+        const shipId = `s${s}`;
+        const shipElement = document.getElementById(shipId);
+        
+        shipElement.classList.remove('placed', 'rotated');
+        shipElement.style.position = '';
+        shipElement.style.left = '';
+        shipElement.style.top = '';
+        
+        shipDock.appendChild(shipElement);
+    }
+    
+    for (const s of shipIds) {
+        const shipId = `s${s}`;
+        const length = getShipLength(shipId);
+        const shipElement = document.getElementById(shipId);
+        
+        let placed = false;
+        while (!placed) {
+            let isRotated = Math.random() > 0.5;
+            let row = Math.floor(Math.random() * 10);
+            let col = Math.floor(Math.random() * 10);
+            
+            const overflow = isOverflowing(col, row, length, isRotated);
+            const overlap = isOverlapping(col, row, length, isRotated, playerShipCoords);
+            
+            if (!overflow && !overlap) {
+                if (isRotated) {
+                    shipElement.classList.add('rotated');
+                } else {
+                    shipElement.classList.remove('rotated');
+                }
+                
+                shipElement.style.position = 'absolute';
+                shipElement.style.left = `${col * 40}px`;
+                shipElement.style.top = `${row * 40}px`;
+                shipElement.classList.add('placed');
+                
+                board1.appendChild(shipElement);
+
+                setShip(col, row, shipElement); 
+                
+                placed = true;
+            }
+        }
+    }
+}
 
 function isOverflowing(col, row, length, isRotated) {
     if (isRotated) {
@@ -114,6 +177,13 @@ function setShip(left, top, ele) {
     const id = ele.id;
     const isRotated = ele.classList.contains('rotated');
     let length = getShipLength(id);
+    if (shipCoords1.has(id)) {
+        const oldCoords = shipCoords1.get(id);
+        for (const c of oldCoords) {
+            playerShipCoords.delete(`${c[0]},${c[1]}`);
+        }
+    }
+
     shipCoords1.set(id, []);
     
     for (let i=0; i<length; i++) {
@@ -129,12 +199,10 @@ function setShip(left, top, ele) {
 }
 
 function getShipLength(id) {
-    if (id === "sa") {length = 4;}
-    else if (id === "sb" || id === "sc") {length = 3;}
-    else if (id === "sd" || id === "se" || id === "sf") {length = 2;}
-    else {length = 1;}
-
-    return length;
+    if (id === "sa") {return 4;}
+    else if (id === "sb" || id === "sc") {return 3;}
+    else if (id === "sd" || id === "se" || id === "sf") {return 2;}
+    else {return 1;}
 }
 
 function updateStatus(message) {
@@ -259,7 +327,6 @@ function computerTurn() {
         board1.querySelector(`[data-row='${row}'][data-col='${col}']`).classList.add('miss');
     }
     updateStatus('Your turn!');
-    setTimeout(() => {}, 500);
     board2.addEventListener('click', handlePlayerAttack);
 }
 
