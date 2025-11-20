@@ -1,7 +1,7 @@
 body {
     display: flex;
     flex-direction: column;
-    gap: 50px;
+    gap: 30px;
     align-items: center;
     background-color: #ffffff;
 }
@@ -47,6 +47,7 @@ body {
     border: 1px solid #3F72AF;
     height: 40px;
     background-color: #DBE2EF;
+    box-sizing: border-box;
 }
 
 .ship-4 {width: 160px;}
@@ -57,6 +58,7 @@ body {
 .placed {
     transform-origin: top left;
     transition: transform 0.2s ease;
+    opacity: 0.5;
 }
 
 .rotated {

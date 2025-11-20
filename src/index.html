@@ -5,13 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="./battleship.css">
-    <script src="./index.js" defer></script>
+    <script type="module" src="./index.js" defer></script>
 </head>
 <body>
     <h1>Battleship</h1>
+    <div class="info">Welcome! Place your ships.</div>
+    <div id="c1">
+        <button id="play" disabled>Play</button>
+        <button id="reset">Reset</button>
+        <button id="randomize">Randomize</button>
+    </div>
     <div id="container">
         <div id="ship-dock">
-            <p>Ship Dock</p>
+            <p>Drag to the board, then click to rotate.</p>
             <div>
                 <div class="ship ship-4" id="sa" draggable="true"></div>
             </div>
@@ -42,14 +48,6 @@
                 <div id="board2"></div>
             </div>
         </div>
-    </div>
-    <div class="info">Welcome! Place your ships. Click on the ship after placing
-        to rotate.
-    </div>
-    <div id="c2">
-        <button id="play">Play</button>
-        <button id="reset">Reset</button>
-        <button id="randomize">Randomize</button>
     </div>
 </body>
 </html>

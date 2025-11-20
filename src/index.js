@@ -1,3 +1,11 @@
+// TODO:
+// 2. check overflow when rotated
+// 3. mark ship and adjacent cells when hit/destroyed
+// 4. remove the coords from the db when a placed ship is held for dragging
+// 5. make computer smarter and solve game not stopping when computer wins.
+// 6. resolve all cells being red when scrolling on 2+ cells glitch
+// 7. keep user board disabled from game start to end
+
 const boards = document.getElementById('boards');
 const board1 = document.getElementById('board1');
 const board2 = document.getElementById('board2');
@@ -50,11 +58,14 @@ function handleDrop(e) {
     let length = getShipLength(id);
 
     if (isOverflowing(col, row, length, isRotated)) {
-        return; // Stops the drop
+        return;
     }
     
     if (isOverlapping(col, row, length, isRotated, playerShipCoords)) {
-        return; // Stops the drop
+        return;
+    }
+    if (isAdjacent(col, row, length, isRotated, playerShipCoords)) {
+        return;
     }
     
     board1.appendChild(draggableElement);
@@ -82,8 +93,6 @@ document.getElementById('reset').addEventListener('click', resetBoard);
 
 function resetBoard() {
     location.reload();
-    shipCoords1.clear();
-    playerShipCoords.clear();
 }
 
 const shipCoords1 = new Map();
@@ -94,10 +103,11 @@ const computerGuesses = new Set();
 
 const randomizeButton = document.getElementById('randomize');
 randomizeButton.addEventListener('click', randomizePlayer);
+
 function randomizePlayer() {
     shipCoords1.clear();
     playerShipCoords.clear();
-    
+
     const shipIds = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
     for (const s of shipIds) {
         const shipId = `s${s}`;
@@ -124,8 +134,9 @@ function randomizePlayer() {
             
             const overflow = isOverflowing(col, row, length, isRotated);
             const overlap = isOverlapping(col, row, length, isRotated, playerShipCoords);
+            const adjacent = isAdjacent(col, row, length, isRotated, playerShipCoords);
             
-            if (!overflow && !overlap) {
+            if (!overflow && !overlap && !adjacent) {
                 if (isRotated) {
                     shipElement.classList.add('rotated');
                 } else {
@@ -145,6 +156,7 @@ function randomizePlayer() {
             }
         }
     }
+    playBtn.disabled = false;
 }
 
 function isOverflowing(col, row, length, isRotated) {
@@ -172,6 +184,33 @@ function isOverlapping(col, row, length, isRotated, coordsSet) {
     return false;
 }
 
+function isAdjacent(col, row, length, isRotated, coordsSet) {
+    const proposedCoords = new Set();
+    for (let i = 0; i < length; i++) {
+        if (isRotated) {
+            proposedCoords.add(`${row + i},${col}`);
+        } else {
+            proposedCoords.add(`${row},${col + i}`);
+        }
+    }
+    
+    // check all neighbors of each proposed cell
+    // (r,c):(r-1,c-1),(r-1,c),(r-1,c+1),(r,c-1),(r,c+1),
+    // (r+1,c-1),(r+1,c),(r+1,c+1).
+    for (const coordStr of proposedCoords) {
+        const [r, c] = coordStr.split(',').map(Number); 
+        for (let dr = -1; dr <= 1; dr++) {
+            for (let dc = -1; dc <= 1; dc++) {
+                if (dr === 0 && dc === 0) continue; 
+                const neighborCoord = `${r + dr},${c + dc}`;
+                if (coordsSet.has(neighborCoord) && !proposedCoords.has(neighborCoord)) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
 
 function setShip(left, top, ele) {
     const id = ele.id;
@@ -196,6 +235,9 @@ function setShip(left, top, ele) {
             playerShipCoords.add(`${top},${left+i}`);
         }
     }
+    if (shipCoords1.size === 10) {
+        playBtn.disabled = false;
+    }
 }
 
 function getShipLength(id) {
@@ -211,18 +253,15 @@ function updateStatus(message) {
 const playBtn = document.getElementById('play');
 
 playBtn.addEventListener('click', () => {
-    if (shipCoords1.size === 10) {
-        randomizeComputer();
-        startGame();
-    }
-    else {
-        alert('Please place all ships!');
-    }
+    randomizeComputer();
+    startGame();
 })
 
 const playerShips = new Set();
 function startGame() {
     playBtn.disabled = true;
+    randomizeButton.disabled = true;
+
     updateStatus('Your turn! Attack the enemy.');
     frame2.classList.toggle('hidden');
     shipDock.classList.toggle('hidden');
